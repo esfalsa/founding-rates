@@ -8,15 +8,30 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * @param {number} beforeTime The UNIX time, in seconds, to find foundings before.
  */
 const getFoundings = cache(async (beforeTime: number | null) => {
-  const endpoint = beforeTime
-    ? `https://www.nationstates.net/cgi-bin/api.cgi?q=happenings;filter=founding;limit=200;beforetime=${beforeTime}`
-    : "https://www.nationstates.net/cgi-bin/api.cgi?q=happenings;filter=founding;limit=200";
+  let res;
 
-  const res = await fetch(endpoint, {
-    headers: {
-      "User-Agent": "NationStates Founding Rates (by: Esfalsa)",
-    },
-  });
+  if (beforeTime) {
+    res = await fetch(
+      `https://www.nationstates.net/cgi-bin/api.cgi?q=happenings;filter=founding;limit=200;beforetime=${beforeTime}`,
+      {
+        headers: {
+          "User-Agent": "NationStates Founding Rates (by: Esfalsa)",
+        },
+      }
+    );
+  } else {
+    res = await fetch(
+      `https://www.nationstates.net/cgi-bin/api.cgi?q=happenings;filter=founding;limit=200`,
+      {
+        headers: {
+          "User-Agent": "NationStates Founding Rates (by: Esfalsa)",
+        },
+        next: {
+          revalidate: 60,
+        },
+      }
+    );
+  }
 
   let ratelimitRemaining = Number(res.headers.get("RateLimit-Remaining"));
   let ratelimitReset = Number(res.headers.get("RateLimit-Reset"));
