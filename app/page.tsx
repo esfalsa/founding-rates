@@ -7,31 +7,15 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * Fetch the 200 most recent founding events
  * @param {number} beforeTime The UNIX time, in seconds, to find foundings before.
  */
-const getFoundings = cache(async (beforeTime: number | null) => {
-  let res;
-
-  if (beforeTime) {
-    res = await fetch(
-      `https://www.nationstates.net/cgi-bin/api.cgi?q=happenings;filter=founding;limit=200;beforetime=${beforeTime}`,
-      {
-        headers: {
-          "User-Agent": "NationStates Founding Rates (by: Esfalsa)",
-        },
-      }
-    );
-  } else {
-    res = await fetch(
-      `https://www.nationstates.net/cgi-bin/api.cgi?q=happenings;filter=founding;limit=200`,
-      {
-        headers: {
-          "User-Agent": "NationStates Founding Rates (by: Esfalsa)",
-        },
-        next: {
-          revalidate: 60,
-        },
-      }
-    );
-  }
+const getFoundings = cache(async (beforeTime: number) => {
+  const res = await fetch(
+    `https://www.nationstates.net/cgi-bin/api.cgi?q=happenings;filter=founding;limit=200;beforetime=${beforeTime}`,
+    {
+      headers: {
+        "User-Agent": "NationStates Founding Rates (by: Esfalsa)",
+      },
+    }
+  );
 
   let ratelimitRemaining = Number(res.headers.get("RateLimit-Remaining"));
   let ratelimitReset = Number(res.headers.get("RateLimit-Reset"));
@@ -64,7 +48,7 @@ const getFoundings = cache(async (beforeTime: number | null) => {
 
 const getAllFoundings = cache(async (targetTime: number) => {
   let data: { nation: string; region: string; time: number }[] = [];
-  let beforeTime: number | null = null;
+  let beforeTime: number = Math.floor(Date.now() / 1000);
 
   do {
     data = [...data, ...(await getFoundings(beforeTime))];
