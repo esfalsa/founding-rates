@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
-  staticPageGenerationTimeout: 300,
+  staticPageGenerationTimeout: 600,
   experimental: {
     appDir: true,
   },
