@@ -2,6 +2,7 @@ import {
   endOfDay,
   getUnixTime,
   isAfter,
+  isBefore,
   isSameDay,
   startOfDay,
   subDays,
@@ -76,7 +77,9 @@ async function getFoundingsOnDay(date: Date) {
     }
   } while (remaining);
 
-  await cache.set(key, foundings);
+  if (isBefore(key, startOfDay(new Date()))) {
+    await cache.set(key, foundings);
+  }
 
   return foundings;
 }
