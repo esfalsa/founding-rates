@@ -84,10 +84,17 @@ async function getFoundingsOnDay(date: Date) {
   return foundings;
 }
 
+// cache the result of getFoundings() only during builds, but not on the disk
+let transientCache: Founding[] | undefined = undefined;
+
 /**
  * Retrieve foundings from the last seven days
  */
 export async function getFoundings() {
+  if (transientCache) {
+    return transientCache;
+  }
+
   const sevenDaysAgo = startOfDay(subDays(new Date(), 7));
   let day = new Date();
 
@@ -99,6 +106,8 @@ export async function getFoundings() {
   }
 
   await cache.prune(sevenDaysAgo);
+
+  transientCache = foundings;
 
   return foundings;
 }
