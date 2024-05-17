@@ -1,5 +1,7 @@
 ---
+import { getFoundings } from "@/lib/client";
 
+const foundings = await getFoundings();
 ---
 
 <html lang="en">
@@ -12,5 +14,8 @@
   </head>
   <body>
     <h1>Astro</h1>
+    <main>
+      <pre>{JSON.stringify(foundings, null, 2)}</pre>
+    </main>
   </body>
 </html>
