@@ -3,3 +3,8 @@ export type Founding = {
   nation: string;
   region: string;
 };
+
+export type RegionData = {
+  name: string;
+  foundings: number;
+};

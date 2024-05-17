@@ -1,20 +1,10 @@
 ---
+import { getFoundingsByRegion } from "@/lib/analysis";
 import { getFoundings } from "@/lib/client";
 
 const foundings = await getFoundings();
 
-const foundingsByRegion: { name: string; value: number }[] = [];
-
-for (const founding of foundings) {
-  const region = foundingsByRegion.find((r) => r.name === founding.region);
-  if (region) {
-    region.value++;
-  } else {
-    foundingsByRegion.push({ name: founding.region, value: 1 });
-  }
-}
-
-foundingsByRegion.sort((a, b) => b.value - a.value);
+const foundingsByRegion = getFoundingsByRegion(foundings);
 ---
 
 <html lang="en">
@@ -57,21 +47,23 @@ foundingsByRegion.sort((a, b) => b.value - a.value);
                     {region.name}
                   </a>
                 </td>
-                <td>{region.value}</td>
+                <td>{region.foundings}</td>
                 <td class="flex flex-row items-center space-x-4">
                   <div class="h-1.5 w-full bg-gray-200">
                     <div
                       class="h-1.5 bg-blue-600"
                       style={{
                         width: `${Math.round(
-                          (region.value / foundingsByRegion[0].value) * 100,
+                          (region.foundings / foundingsByRegion[0].foundings) *
+                            100,
                         )}%`,
                       }}
                     />
                   </div>
-                  <span>{`${((region.value / foundings.length) * 100).toFixed(
-                    2,
-                  )}%`}</span>
+                  <span>{`${(
+                    (region.foundings / foundings.length) *
+                    100
+                  ).toFixed(2)}%`}</span>
                 </td>
               </tr>
             ))
