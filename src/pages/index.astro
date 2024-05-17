@@ -2,6 +2,19 @@
 import { getFoundings } from "@/lib/client";
 
 const foundings = await getFoundings();
+
+const foundingsByRegion: { name: string; value: number }[] = [];
+
+for (const founding of foundings) {
+  const region = foundingsByRegion.find((r) => r.name === founding.region);
+  if (region) {
+    region.value++;
+  } else {
+    foundingsByRegion.push({ name: founding.region, value: 1 });
+  }
+}
+
+foundingsByRegion.sort((a, b) => b.value - a.value);
 ---
 
 <html lang="en">
@@ -13,9 +26,58 @@ const foundings = await getFoundings();
     <title>Astro</title>
   </head>
   <body>
-    <h1>Astro</h1>
-    <main>
-      <pre>{JSON.stringify(foundings, null, 2)}</pre>
+    <main class="flex min-h-screen flex-col items-center justify-center p-12">
+      <p>
+        Showing data from {foundings.length} foundings between{" "}
+        {foundings.at(-1)?.time.toLocaleString()} and{" "}
+        {foundings[0].time.toLocaleString()}.
+      </p>
+      <p>Page generated at {new Date().toString()}.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Region</th>
+            <th>Foundings</th>
+            <th class="w-32">Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            foundingsByRegion.map((region) => (
+              <tr>
+                <td>
+                  <a
+                    href={`https://www.nationstates.net/region=${encodeURIComponent(
+                      region.name,
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    class="text-blue-600"
+                  >
+                    {region.name}
+                  </a>
+                </td>
+                <td>{region.value}</td>
+                <td class="flex flex-row items-center space-x-4">
+                  <div class="h-1.5 w-full bg-gray-200">
+                    <div
+                      class="h-1.5 bg-blue-600"
+                      style={{
+                        width: `${Math.round(
+                          (region.value / foundingsByRegion[0].value) * 100,
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                  <span>{`${((region.value / foundings.length) * 100).toFixed(
+                    2,
+                  )}%`}</span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
     </main>
   </body>
 </html>
