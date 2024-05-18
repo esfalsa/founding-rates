@@ -1,0 +1,19 @@
+---
+interface Props {
+  progress: number;
+  class?: string;
+}
+
+const { progress, class: klass } = Astro.props;
+---
+
+<div class="flex">
+  <progress
+    max="100"
+    value={progress}
+    class:list={[
+      "h-1.5 w-full [&::-webkit-progress-bar]:overflow-hidden [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-gray-300 [&::-webkit-progress-value]:bg-blue-600",
+      klass,
+    ]}>{progress.toFixed(4)}%</progress
+  >
+</div>

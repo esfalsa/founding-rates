@@ -1,0 +1,17 @@
+---
+interface Props {
+  href: string;
+  newTab?: boolean;
+  class?: string;
+}
+
+const { href, newTab, class: klass, ...rest } = Astro.props;
+---
+
+<a
+  href={href}
+  target={newTab ? "_blank" : undefined}
+  rel={newTab ? "noopener noreferrer" : undefined}
+  class:list={["text-blue-600 hover:text-blue-700 hover:underline", klass]}
+  {...rest}><slot /></a
+>

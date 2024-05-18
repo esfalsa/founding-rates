@@ -1,6 +1,11 @@
 ---
+import Link from "@/components/Link.astro";
+import ProgressBar from "@/components/ProgressBar.astro";
+import Time from "@/components/Time.astro";
 import { getFoundingsByRegion } from "@/lib/analysis";
 import { getFoundings } from "@/lib/client";
+
+import "@/styles/index.css";
 
 const foundings = await getFoundings();
 
@@ -15,61 +20,87 @@ const foundingsByRegion = getFoundingsByRegion(foundings);
     <meta name="generator" content={Astro.generator} />
     <title>Astro</title>
   </head>
-  <body>
-    <main class="flex min-h-screen flex-col items-center justify-center p-12">
-      <p>
-        Showing data from {foundings.length} foundings between{" "}
-        {foundings.at(-1)?.time.toLocaleString()} and{" "}
-        {foundings[0].time.toLocaleString()}.
-      </p>
-      <p>Page generated at {new Date().toString()}.</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Region</th>
-            <th>Foundings</th>
-            <th class="w-32">Percentage</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            foundingsByRegion.map((region) => (
-              <tr>
-                <td>
-                  <a
-                    href={`https://www.nationstates.net/region=${encodeURIComponent(
-                      region.name,
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    class="text-blue-600"
-                  >
-                    {region.name}
-                  </a>
-                </td>
-                <td>{region.foundings}</td>
-                <td class="flex flex-row items-center space-x-4">
-                  <div class="h-1.5 w-full bg-gray-200">
-                    <div
-                      class="h-1.5 bg-blue-600"
-                      style={{
-                        width: `${Math.round(
-                          (region.foundings / foundingsByRegion[0].foundings) *
-                            100,
-                        )}%`,
-                      }}
-                    />
-                  </div>
-                  <span>{`${(
-                    (region.foundings / foundings.length) *
-                    100
-                  ).toFixed(2)}%`}</span>
-                </td>
+  <body class="bg-gray-50 text-sm text-gray-800">
+    <main class="mt-12 w-full">
+      <header>
+        <p class="mx-auto w-full max-w-screen-md px-6 text-gray-600 md:px-12">
+          Retrieved <strong class="text-gray-700">
+            {foundings.length.toLocaleString()}
+          </strong> foundings across <strong class="text-gray-700"
+            >{foundingsByRegion.length}</strong
+          > regions between
+          <Time class="text-gray-700" datetime={foundings[0].time} /> and
+          <Time class="text-gray-700" datetime={foundings.at(-1)?.time} />.
+        </p>
+      </header>
+      <article class="mx-auto mt-6 w-full max-w-screen-md md:px-12">
+        <h1 class="sr-only">Foundings by Region</h1>
+        <div
+          class="overflow-x-auto border border-gray-300 shadow md:rounded-lg"
+        >
+          <table class="min-w-full divide-gray-200 bg-white text-left">
+            <thead class="border-b border-gray-300 bg-gray-100">
+              <tr class="font-medium text-gray-900">
+                <th scope="col" class="py-2 pl-6 pr-4 md:px-4">Region</th>
+                <th scope="col" class="w-0 whitespace-nowrap px-4 py-2"
+                  >Foundings</th
+                >
+                <th scope="col" class="w-0 whitespace-nowrap px-4 py-2"
+                  >Relative Share</th
+                >
+                <th
+                  scope="col"
+                  class="w-0 whitespace-nowrap py-2 pl-4 pr-6 md:px-4"
+                  >Percentage</th
+                >
               </tr>
-            ))
-          }
-        </tbody>
-      </table>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              {
+                foundingsByRegion.map((region, index) => {
+                  const percentageOfLargest =
+                    (region.foundings / foundingsByRegion[0].foundings) * 100;
+                  const percentageOfTotal =
+                    (region.foundings / foundings.length) * 100;
+
+                  return (
+                    <tr class={index % 2 === 1 ? "bg-gray-50" : "bg-white"}>
+                      <td class="py-2 pl-6 pr-4 md:px-4">
+                        <Link
+                          href={`https://www.nationstates.net/region=${encodeURIComponent(region.name)}`}
+                          newTab
+                        >
+                          {region.name}
+                        </Link>
+                      </td>
+                      <td class="px-4 py-2 text-right tabular-nums">
+                        {region.foundings.toLocaleString()}
+                      </td>
+                      <td class="px-4 py-2">
+                        <ProgressBar progress={percentageOfLargest} />
+                      </td>
+                      <td class="py-2 pl-4 pr-6 text-right tabular-nums md:px-4">
+                        {percentageOfTotal.toFixed(2)}%
+                      </td>
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
     </main>
+    <footer class="mx-auto mb-36 mt-12 w-full max-w-screen-md px-6 md:px-12">
+      <p class="text-gray-600">
+        Page generated at <Time class="text-gray-700" datetime={new Date()} />.
+        Found a bug or want to contribute? Check out the source code on <Link
+          href="https://github.com/esfalsa/founding-rates"
+          newTab>GitHub</Link
+        >. Want to process the data yourself? Check out the JSON files of
+        <Link href="foundings.json">all retrieved foundings</Link> and the
+        <Link href="regions.json">foundings by region</Link>.
+      </p>
+    </footer>
   </body>
 </html>
