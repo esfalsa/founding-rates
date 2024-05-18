@@ -29,7 +29,7 @@ const foundingsByRegion = getFoundingsByRegion(foundings);
           </strong> foundings across <strong class="text-gray-700"
             >{foundingsByRegion.length}</strong
           > regions between
-          <Time class="text-gray-700" datetime={foundings[0].time} /> and
+          <Time class="text-gray-700" datetime={foundings[0]?.time} /> and
           <Time class="text-gray-700" datetime={foundings.at(-1)?.time} />.
         </p>
       </header>
@@ -59,7 +59,7 @@ const foundingsByRegion = getFoundingsByRegion(foundings);
               {
                 foundingsByRegion.map((region, index) => {
                   const percentageOfLargest =
-                    (region.foundings / foundingsByRegion[0].foundings) * 100;
+                    (region.foundings / foundingsByRegion[0]!.foundings) * 100;
                   const percentageOfTotal =
                     (region.foundings / foundings.length) * 100;
 
