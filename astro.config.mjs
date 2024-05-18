@@ -3,5 +3,7 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://esfalsa.github.io",
+  base: "/founding-rates",
   integrations: [tailwind({ applyBaseStyles: false })],
 });
