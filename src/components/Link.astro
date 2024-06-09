@@ -12,6 +12,9 @@ const { href, newTab, class: klass, ...rest } = Astro.props;
   href={href}
   target={newTab ? "_blank" : undefined}
   rel={newTab ? "noopener noreferrer" : undefined}
-  class:list={["text-blue-600 hover:text-blue-700 hover:underline", klass]}
+  class:list={[
+    "text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-500 dark:hover:text-blue-400",
+    klass,
+  ]}
   {...rest}><slot /></a
 >

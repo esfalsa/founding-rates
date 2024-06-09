@@ -12,7 +12,7 @@ const { progress, class: klass } = Astro.props;
     max="100"
     value={progress}
     class:list={[
-      "h-1.5 w-full [&::-webkit-progress-bar]:overflow-hidden [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-gray-300 [&::-webkit-progress-value]:bg-blue-600",
+      "h-1.5 w-full [&::-webkit-progress-bar]:overflow-hidden [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-gray-300 dark:[&::-webkit-progress-bar]:bg-gray-800 [&::-webkit-progress-value]:bg-blue-600 dark:[&::-webkit-progress-value]:bg-blue-500",
       klass,
     ]}>{progress.toFixed(4)}%</progress
   >

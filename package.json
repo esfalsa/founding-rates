@@ -13,7 +13,7 @@
   "dependencies": {
     "@astrojs/check": "^0.7.0",
     "@astrojs/tailwind": "^5.1.0",
-    "astro": "^4.8.5",
+    "astro": "^4.10.1",
     "date-fns": "^3.6.0",
     "domhandler": "^5.0.3",
     "domutils": "^3.1.0",

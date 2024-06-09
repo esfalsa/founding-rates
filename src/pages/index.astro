@@ -1,6 +1,7 @@
 ---
 import Link from "@/components/Link.astro";
 import ProgressBar from "@/components/ProgressBar.astro";
+import ThemeToggle from "@/components/ThemeToggle.astro";
 import Time from "@/components/Time.astro";
 import { getFoundingsByRegion } from "@/lib/analysis";
 import { getFoundings } from "@/lib/client";
@@ -24,27 +25,41 @@ const foundingsByRegion = getFoundingsByRegion(foundings);
     <meta name="generator" content={Astro.generator} />
     <title>NationStates Founding Rates</title>
   </head>
-  <body class="bg-gray-50 text-sm text-gray-800">
-    <main class="mt-12 w-full">
+  <body
+    class="bg-gray-50 text-sm text-gray-800 dark:bg-gray-950 dark:text-gray-400"
+  >
+    <ThemeToggle class="fixed right-6 top-6" />
+    <main class="mt-16 w-full">
       <header>
-        <p class="mx-auto w-full max-w-screen-md px-6 text-gray-600 md:px-12">
-          Retrieved <strong class="text-gray-700">
+        <p
+          class="mx-auto w-full max-w-screen-md px-6 text-gray-600 md:px-12 dark:text-gray-400"
+        >
+          Retrieved <strong class="text-gray-700 dark:text-gray-300">
             {foundings.length.toLocaleString()}
-          </strong> foundings across <strong class="text-gray-700"
+          </strong> foundings across <strong
+            class="text-gray-700 dark:text-gray-300"
             >{foundingsByRegion.length}</strong
           > regions between
-          <Time class="text-gray-700" datetime={foundings[0]?.time} /> and
-          <Time class="text-gray-700" datetime={foundings.at(-1)?.time} />.
+          <Time
+            class="text-gray-700 dark:text-gray-300"
+            datetime={foundings[0]?.time}
+          /> and
+          <Time
+            class="text-gray-700 dark:text-gray-300"
+            datetime={foundings.at(-1)?.time}
+          />.
         </p>
       </header>
       <article class="mx-auto mt-6 w-full max-w-screen-md md:px-12">
         <h1 class="sr-only">Foundings by Region</h1>
         <div
-          class="overflow-x-auto border border-gray-300 shadow md:rounded-lg"
+          class="overflow-x-auto border border-gray-300 shadow md:rounded-lg dark:border-gray-700"
         >
-          <table class="min-w-full divide-gray-200 bg-white text-left">
-            <thead class="border-b border-gray-300 bg-gray-100">
-              <tr class="font-medium text-gray-900">
+          <table class="min-w-full bg-white text-left">
+            <thead
+              class="border-b border-gray-300 bg-gray-100 dark:border-gray-700 dark:bg-gray-800"
+            >
+              <tr class="font-medium text-gray-900 dark:text-gray-50">
                 <th scope="col" class="py-2 pl-6 pr-4 md:px-4">Region</th>
                 <th scope="col" class="w-0 whitespace-nowrap px-4 py-2"
                   >Foundings</th
@@ -59,7 +74,7 @@ const foundingsByRegion = getFoundingsByRegion(foundings);
                 >
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
               {
                 foundingsByRegion.map((region, index) => {
                   const percentageOfLargest =
@@ -68,7 +83,13 @@ const foundingsByRegion = getFoundingsByRegion(foundings);
                     (region.foundings / foundings.length) * 100;
 
                   return (
-                    <tr class={index % 2 === 1 ? "bg-gray-50" : "bg-white"}>
+                    <tr
+                      class={
+                        index % 2 === 1
+                          ? "bg-gray-50 dark:bg-gray-950"
+                          : "bg-white dark:bg-gray-900"
+                      }
+                    >
                       <td class="py-2 pl-6 pr-4 md:px-4">
                         <Link
                           href={`https://www.nationstates.net/region=${encodeURIComponent(region.name)}`}
@@ -96,9 +117,11 @@ const foundingsByRegion = getFoundingsByRegion(foundings);
       </article>
     </main>
     <footer class="mx-auto mb-36 mt-12 w-full max-w-screen-md px-6 md:px-12">
-      <p class="text-gray-600">
-        Page generated at <Time class="text-gray-700" datetime={new Date()} />.
-        Found a bug or want to contribute? Check out the source code on <Link
+      <p class="text-gray-600 dark:text-gray-400">
+        Page generated at <Time
+          class="text-gray-700 dark:text-gray-300"
+          datetime={new Date()}
+        />. Found a bug or want to contribute? Check out the source code on <Link
           href="https://github.com/esfalsa/founding-rates"
           newTab>GitHub</Link
         >. Want to process the data yourself? Check out the JSON files of
