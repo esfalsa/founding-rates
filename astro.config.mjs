@@ -1,9 +1,15 @@
 import { defineConfig } from "astro/config";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
+// import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://esfalsa.github.io",
+
+  // integrations: [tailwind({ applyBaseStyles: false })],
   base: "/founding-rates",
-  integrations: [tailwind({ applyBaseStyles: false })],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
